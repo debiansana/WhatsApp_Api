@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>ANET ID - WA</title>
+		<meta name="description" content="Whatsapp BOT">
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+		<link rel="icon" type="image/svg" href="./icon.svg"/>
+		<link rel="stylesheet" type="text/css" href="./main1.css">
+	</head>
+	<body><!-- bagian header template -->
+	<header>
+		<h1 class="judul">WhatsApp Gateway API - BOT</h1>
+		<p class="deskripsi">MONITORING MIKROTIK</p>
+	</header>
+	<!-- akhir bagian header template -->
+	
+	<div class="wrap">
+		<!-- bagian menu		 -->
+		<nav class="menu">
+			<ul>
+				<li>
+					<a href="../">Home</a>
+				</li>
+				<li>
+					<a target="_blank" href="../scan">Scan QR</a>
+				</li>
+				<li>
+					<a target="_blank" href="https://www.youtube.com/@anet_id/videos">Tutorial</a>
+				</li>
+			</ul>
+		</nav>
+		<!-- akhir bagian menu -->
+ 
+		<!-- bagian sidebar website -->
+		<aside class="sidebar">
+			<div class="widget">
+				<h2>Mikhmon ONLINE</h2>
+				<p>Teman-teman bisa memonitoring hotspot mikrotik menggunakan tool mikhmon online dimanapun dan kapanpun.</p>
+			</div>
+			<div class="widget">
+				<h2>Website Undangan Pernikahan Digital</h2>
+				<p>Teman-teman bisa membuat undangan pernikahan digital dengan biaya terjangkau & gratis TRIAL selama 3 hari saat pertama mendaftar.<br> Kunjungi : <a target="_blank" href="https://anet.biz.id">www.anet.biz.id</a>.</p>
+			</div>
+		</aside>
+		<!-- akhir bagian sidebar website -->
+ 
+		<!-- bagian konten Blog -->
+		<div class="blog">
+			<div class="conteudo">
+				<div class="post-info">
+					Di Posting Oleh <b>ANET ID</b>
+				</div>
+				<img src="./wa.jpg">
+				<h1> Script WhatsApp BOT Monitoring Mikrotik </h1>
+				<hr>
+				<p>
+					<font color="red">Script PPPoE :</font><br><br><font color="blue">On Up / Login</font><br>
+                    :local nama "$user";<br>
+                    :local ips [/ppp active get [find name=$nama] address];<br>
+                    :local up [/ppp active get [find name=$nama] uptime];<br>
+                    :local caller [/ppp active get [find name=$nama] caller-id];<br>
+                    :local service [/ppp active get [find name=$nama] service];<br>
+                    :local active [/ppp active print count];<br>
+                    :local profile [/ppp secret get [find name=$nama] profile];<br>
+                    :local datetime "Tanggal: $[/system clock get date] %0AJam: $[/system clock get time]";<br>
+                    :local lastdisc [/ppp secret get [find name=$user] last-disconnect-reason];<br>
+                    :local lastlogout [/ppp secret get [find name=$user] last-logged-out];<br>
+                    :local lastcall [/ppp secret get [find name=$user] last-caller-id];<br>
+                    <br>
+                    <br>/tool fetch http-header-field="content-type: application/x-www-form-urlencoded" http-method=post http-data="id_group=12xxxxxxxxxx@g.us&message=\E2\9C\85 TERHUBUNG%0A$datetime%0AUser : $user%0AIP Address : Private%0AMac Address : $caller%0ATipe Anggota : $profile%0AUptime : $up%0ATotal Active : $active Client%0AService : $service%0AKondisi Terputus : $lastdisc %0ATerakhir Terputus : $lastlogout %0ALast MAC : $lastcall" url="http://domain.com/send-group-message" keep-result=no;<br><br>
+					<font color="blue">On Down / Logout</font><br>					
+					:local lastdisc [/ppp secret get [find name=$user] last-disconnect-reason];<br>
+					:local lastlogout [/ppp secret get [find name=$user] last-logged-out];<br>
+					:local lastcall [/ppp secret get [find name=$user] last-caller-id];<br>
+					:local active [/ppp active print count];<br>
+					:local datetime "Tanggal: $[/system clock get date] %0AJam: $[/system clock get time]";<br>
+					<br>
+					<br>/tool fetch http-header-field="content-type: application/x-www-form-urlencoded" http-method=post http-data="id_group=12xxxxxxxxxxx@g.us&message=\E2\9D\8CTERPUTUS %0A$datetime%0AUser : $user%0AKondisi Terputus : $lastdisc %0ATerakhir Terputus : $lastlogout %0ALast MAC : $lastcall %0ATotal active: $active Client" url="http://domain.com/send-group-message" keep-result=no;<br>
+				</p><br>
+				<p>
+				    <font color="red">Netwatch - Monitoring Acess Point :</font><br><br>
+				    <font color="blue">UP :</font><br>
+				    :local hh $host<br>
+                    :local datetime "Tanggal: $[/system clock get date] %0A Jam: $[/system clock get time]"<br>
+                    :local com [/tool netwatch get value-name=comment [find host=$hh] comment];<br>
+                    <br>
+                    /tool fetch http-header-field="content-type: application/x-www-form-urlencoded" http-method=post http-data="id_group=12xxxxxxxxxx@g.us&message=$datetime %0A%0A$com %0AStatus : ON \E2\9C\85" url="http://domain.com/send-group-message" keep-result=no;<br>
+                    <br><font color="blue">DOWN :</font><br>
+                    :local hh $host<br>
+                    :local datetime "Tanggal: $[/system clock get date] %0A Jam: $[/system clock get time]"<br>
+                    :local com [/tool netwatch get value-name=comment [find host=$hh] comment];<br>
+                    <br>
+                    /tool fetch http-header-field="content-type: application/x-www-form-urlencoded" http-method=post http-data="id_group=12xxxxxxxxxx@g.us&message=$datetime %0A%0A$com %0AStatus : OFF \E2\9D\8C" url="http://domain.com/send-group-message" keep-result=no;<br>
+				</p>
+			</div>
+		</div>
+		<!-- akhir bagian konten Blog -->
+	</div>
+	</body>
+</html>
